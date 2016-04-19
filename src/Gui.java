@@ -4,14 +4,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 import javax.swing.JTable;
-import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.ListSelectionModel;
@@ -21,7 +16,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import java.awt.Component;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,6 +24,10 @@ import javax.swing.JTextPane;
 
 public class Gui extends JFrame{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	public static JTable table;
 	public static JTextPane textPane = new JTextPane();
@@ -57,9 +55,9 @@ public class Gui extends JFrame{
 				int moves = 0;
 				Algorithm a1 = new Algorithm(table, gameCounter);
 				if(moves < 9){
-					moves++;
+					
 					a1.userTurn();
-						
+					moves++;	
 					System.out.print(moves);
 					return; 
 				}
@@ -123,26 +121,8 @@ public class Gui extends JFrame{
 		{
 			
 			public void actionPerformed(ActionEvent e){
-				int j;
-				int i;
-					for(j = 0; j < 3; j++){
-						for(i = 0; i < 3; i++){
-						  
-							
-							int row = j;
-					        int column = i;
-					      // do some action if appropriate column
-					      
-					      table.setValueAt("", row, column);
-					    
-					      
-						}
-						if((i == 2) && (j == 2)){
-							break;
-						}
-						
-					}
-					  
+				Algorithm a2 = new Algorithm(table, gameCounter);
+				a2.resetGUI();
 			}
 				
 			
@@ -184,5 +164,11 @@ public class Gui extends JFrame{
 		panel.add(textPane_1);
 		
 	}
-
+	
+	
+	
+	
+	
+	
+	
 }
