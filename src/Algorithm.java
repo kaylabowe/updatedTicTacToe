@@ -2,22 +2,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 
 public class Algorithm {
 	
 	JTable tableAI = new JTable();
+	JTextPane textPane;
+	JTextPane textPane1;
 	public static int moves = 0; 
 	public int gameCounter;
-	
+
 	public Algorithm(JTable table1, int gameCounterImp){
 	tableAI = table1;
 	gameCounter = gameCounterImp;
+	
 	}
 	
 	public void defend(int x, int y){
 
 		if(gameCounter % 2 == 0){
 			if(tableAI.getValueAt(1, 1) ==  "X"){
+				
 				if(moves == 1){
 					if((x == 1) && (y == 1)){
 						tableAI.setValueAt("O", 0, 0);
@@ -28,11 +33,16 @@ public class Algorithm {
 						moves++;
 						System.out.println("AI Move 2:" + moves);
 					}
-				}
+				} // End of move 1
 
 				if(moves == 3){
-
-					if(checkDefend()){
+					if(tableAI.getValueAt(1, 1) == "X" && tableAI.getValueAt(2, 2) == "X")
+					{
+						tableAI.setValueAt("O", 0, 2);
+						moves++;
+					}
+					else if(checkDefend())
+					{
 						checkDefend();
 						moves++;
 						System.out.println("AI Move 4: " + moves);
@@ -43,9 +53,8 @@ public class Algorithm {
 						findNull();
 
 					}
-
-
-				}
+				} // End of move 3
+				
 				if(moves == 5){
 
 					if(checkWin()){
@@ -58,30 +67,33 @@ public class Algorithm {
 
 						System.out.println("Something happened at move 5 corner " + moves);
 						moves++;
-
+					}else
+					{
+						findNull();
 					}
-
-
-				}
+				} 
 				if(moves == 7){					
 					if(checkWin()){
 						moves++;
 						return;
 					}
 					if(checkDefend()){
-
-
 						checkDefend();
 						moves++;
 						System.out.println("Something happened at move 7 cross");
 					}
-				}
+					else
+					{
+						findNull();
+					}
+				} // End of move 7
 
 				if(moves == 9){
 					if(checkWin() == false){
 						System.out.println("IT'S A DRAW!");
 					}
-				}
+				} // End of move 9
+				
 			}// End of first move condition
 
 			//Second move condition
@@ -91,23 +103,32 @@ public class Algorithm {
 					tableAI.setValueAt("O", 1, 1);
 					moves++;
 					System.out.println("AI Move 2:" + moves);
-				}
-
-
+				} // End of move 1
+				
 				if(moves == 3){
 					if(checkDefend()){
 						checkDefend();
 						moves++;
 						System.out.println("AI Move 4: " + moves);
 						return;
-					}	
+					}else if(tableAI.getValueAt(2, 0) == "X" && tableAI.getValueAt(0, 2) == "X")
+					{
+						tableAI.setValueAt("O", 0, 1);
+						moves++;
+					}else if(tableAI.getValueAt(0, 2) == "X" && tableAI.getValueAt(2, 1) == "X"){
+						tableAI.setValueAt("O", 1, 2);
+						moves++;
+					}
+					else if(tableAI.getValueAt(0, 0) == "X" && tableAI.getValueAt(2, 1) == "X"){
+						tableAI.setValueAt("O", 1, 0);
+						moves++;
+					}
 					else
 					{
 						findNull();
 					}
-
-
-				}
+				} // End of move 3
+				
 				if(moves == 5){
 					if(checkWin()){
 						moves++;
@@ -118,13 +139,23 @@ public class Algorithm {
 						moves++;
 						System.out.println("AI Move 6: " + moves);
 					}
+					else if(tableAI.getValueAt(0, 0) == "X" && tableAI.getValueAt(1, 2) == "X" && tableAI.getValueAt(2, 1) == "X"){
+						tableAI.setValueAt("O", 2, 2);
+						moves++;
+					}
+					else if(tableAI.getValueAt(0, 0) == "X" && tableAI.getValueAt(2, 1) == "X"){
+						tableAI.setValueAt("O", 0, 2);
+						moves++;
+					}else if(tableAI.getValueAt(0, 0) == "X" && tableAI.getValueAt(1, 2) == "X" && tableAI.getValueAt(2, 1) == "X"){
+						tableAI.setValueAt("O", 1, 0);
+						moves++;
+					}
 					else
 					{
 						findNull();
 					}
 
-
-				}
+				} // End of move 5
 
 				if(moves == 7){
 
@@ -141,12 +172,14 @@ public class Algorithm {
 					{
 						findNull();
 					}	
-				}
+				} // End of move 7
+				
 				if(moves == 9){
 					if(checkWin() == false){
 						System.out.println("IT'S A DRAW!");
 					}
-				} 
+				} // End of move 9
+				
 			}// Second Move
 		}//End of turn counter if
 	} // End of defent()
@@ -172,23 +205,11 @@ public class Algorithm {
 		});
 	}
 	
-	private boolean cornerPlacement(int x, int y){
-		if(((x == 0) && (y == 0)) || ((x == 2) && (y == 2)) || ((x == 0) && (y == 2)) || ((x == 2) && (y == 0))){
-			return true;
-		}else
-			return false;
-		
-	}
 	
-	private boolean crossPlacement(int x, int y){
-		if(((x == 0) && (y == 1)) || ((x == 1) && (y == 0)) || ((x == 1) && (y == 2)) || ((x == 2) && (y == 1))){
-			return true;
-		}else
-			return false;
-	}
-	
-	private boolean checkWin(){
+	public boolean checkWin(){
 		//Horizontal Win
+		int comp = 0;
+		int playa = 1;
 		if(((tableAI.getValueAt(0, 0) == "O" && tableAI.getValueAt(0, 1) == "O") || 
 		   (tableAI.getValueAt(0, 0) == "O" && tableAI.getValueAt(0, 2) == "O") ||
 		   (tableAI.getValueAt(0, 1) == "O" && tableAI.getValueAt(0, 2) == "O")) &&
@@ -196,6 +217,7 @@ public class Algorithm {
 			tableAI.setValueAt("O", 0, 0);
 			tableAI.setValueAt("O", 0, 1);
 			tableAI.setValueAt("O", 0, 2);
+			//endGame(0);
 			return true;
 		}
 		if(((tableAI.getValueAt(1, 0) == "O" && tableAI.getValueAt(1, 1) == "O") || 
@@ -205,6 +227,7 @@ public class Algorithm {
 			tableAI.setValueAt("O", 1, 0);
 			tableAI.setValueAt("O", 1, 1);
 			tableAI.setValueAt("O", 1, 2);
+			//endGame(0);
 			return true;
 		}
 		if(((tableAI.getValueAt(2, 0) == "O" && tableAI.getValueAt(2, 1) == "O") || 
@@ -214,6 +237,7 @@ public class Algorithm {
 			tableAI.setValueAt("O", 2, 0);
 			tableAI.setValueAt("O", 2, 1);
 			tableAI.setValueAt("O", 2, 2);
+			//endGame(0);
 			return true;
 		}
 		//Vertical Wins
@@ -224,6 +248,7 @@ public class Algorithm {
 			tableAI.setValueAt("O", 0, 0);
 			tableAI.setValueAt("O", 1, 0);
 			tableAI.setValueAt("O", 2, 0);
+			//endGame(0);
 			return true;
 		}
 		if(((tableAI.getValueAt(0, 1) == "O" && tableAI.getValueAt(1, 1) == "O") || 
@@ -233,6 +258,7 @@ public class Algorithm {
 			tableAI.setValueAt("O", 0, 1);
 			tableAI.setValueAt("O", 1, 1);
 			tableAI.setValueAt("O", 2, 1);
+			//endGame(0);
 			return true;
 		}
 		if(((tableAI.getValueAt(0, 2) == "O" && tableAI.getValueAt(1, 2) == "O") || 
@@ -242,6 +268,7 @@ public class Algorithm {
 			tableAI.setValueAt("O", 0, 2);
 			tableAI.setValueAt("O", 1, 2);
 			tableAI.setValueAt("O", 2, 2);
+			//endGame(0);
 			return true;
 		}
 		//Diagonal Wins
@@ -253,6 +280,7 @@ public class Algorithm {
 			tableAI.setValueAt("O", 1, 1);
 			tableAI.setValueAt("O", 2, 2);
 			System.out.println("this statement");
+			//endGame(0);
 			return true;
 		}
 		if(((tableAI.getValueAt(0, 2) == "O" && tableAI.getValueAt(1, 1) == "O") || 
@@ -263,11 +291,64 @@ public class Algorithm {
 			tableAI.setValueAt("O", 1, 1);
 			tableAI.setValueAt("O", 2, 0);
 			System.out.println("that statement");
-
+			//endGame(0);
 			return true;
 		}
 		
 		return false;
+	}
+	
+	public int checkGameWin(){
+		if(tableAI.getValueAt(0, 0) ==  "O" && tableAI.getValueAt(0, 1) == "O" && tableAI.getValueAt(0, 2) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(1, 0) ==  "O" && tableAI.getValueAt(1, 1) == "O" && tableAI.getValueAt(1, 2) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(2, 0) ==  "O" && tableAI.getValueAt(2, 1) == "O" && tableAI.getValueAt(2, 2) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(0, 0) ==  "X" && tableAI.getValueAt(0, 1) == "X" && tableAI.getValueAt(0, 2) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		} else if(tableAI.getValueAt(1, 0) ==  "X" && tableAI.getValueAt(1, 1) == "X" && tableAI.getValueAt(1, 2) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		}else if(tableAI.getValueAt(2, 0) ==  "X" && tableAI.getValueAt(2, 1) == "X" && tableAI.getValueAt(2, 2) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		}else if(tableAI.getValueAt(0, 0) ==  "O" && tableAI.getValueAt(1, 0) == "O" && tableAI.getValueAt(2, 0) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(0, 1) ==  "O" && tableAI.getValueAt(1, 1) == "O" && tableAI.getValueAt(2, 1) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(0, 2) ==  "O" && tableAI.getValueAt(1, 2) == "O" && tableAI.getValueAt(2, 2) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(0, 0) ==  "X" && tableAI.getValueAt(1, 0) == "X" && tableAI.getValueAt(2, 0) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		}else if(tableAI.getValueAt(0, 1) ==  "X" && tableAI.getValueAt(1, 1) == "X" && tableAI.getValueAt(2, 1) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		}else if(tableAI.getValueAt(0, 2) ==  "X" && tableAI.getValueAt(1, 2) == "X" && tableAI.getValueAt(2, 2) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		}else if(tableAI.getValueAt(0, 0) ==  "O" && tableAI.getValueAt(1, 1) == "O" && tableAI.getValueAt(2, 2) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(0, 2) ==  "O" && tableAI.getValueAt(1, 1) == "O" && tableAI.getValueAt(2, 0) ==  "O"){
+			System.out.println("O wins");
+			return 1;
+		}else if(tableAI.getValueAt(0, 0) ==  "X" && tableAI.getValueAt(1, 1) == "X" && tableAI.getValueAt(2, 2) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		}else if(tableAI.getValueAt(0, 2) ==  "X" && tableAI.getValueAt(1, 1) == "X" && tableAI.getValueAt(2, 0) ==  "X"){
+			System.out.println("X wins");
+			return 0;
+		}
+		return 2;
 	}
 	
 	public boolean checkDefend(){
@@ -283,7 +364,7 @@ public class Algorithm {
 						tableAI.setValueAt("O", 0, 1);
 						return true;
 					}
-					if(tableAI.getValueAt(0, 1) == null){
+					if(tableAI.getValueAt(0, 2) == null){
 						tableAI.setValueAt("O", 0, 2);
 						return true;
 					}
@@ -495,6 +576,19 @@ public class Algorithm {
 				
 			}
 	}
+	
+//	public void endGame(int winNum){
+//		  	int counter = 0;
+//			counter++;
+//			if(winNum == 0){
+//				textPane1.setText(Integer.toString(counter));
+//			}
+//		
+//		
+//			if(winNum == 1){
+//				textPane.setText(Integer.toString(counter));
+//			}
+//	}
 
 }
 

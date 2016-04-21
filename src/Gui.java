@@ -30,12 +30,16 @@ public class Gui extends JFrame{
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	public static JTable table;
-	public static JTextPane textPane = new JTextPane();
-	public static JTextPane textPane_1 = new JTextPane();
+	public JTextPane textPane = new JTextPane();
+	public JTextPane textPane_1 = new JTextPane();
 	static ListSelectionModel listSelectionModel; 
 	public static int gameCounter = 0;
 	public int playerScore = 0;
 	public int computerScore = 0;
+	public static int comp =0;
+	public static int player = 0;
+	public static int tie = 0;
+	//public static int moves = 0;
 	
 	/**
 	 * Launch the application.
@@ -53,17 +57,14 @@ public class Gui extends JFrame{
 				}
 				
 				int moves = 0;
+				int comp = 0;
 				Algorithm a1 = new Algorithm(table, gameCounter);
-				if(moves < 9){
-					
+				if(moves <9 )
+				{	
 					a1.userTurn();
 					moves++;	
 					System.out.print(moves);
-					return; 
 				}
-				
-						
-				
 					
 			}
 		});
@@ -122,6 +123,17 @@ public class Gui extends JFrame{
 			
 			public void actionPerformed(ActionEvent e){
 				Algorithm a2 = new Algorithm(table, gameCounter);
+				
+				if(a2.checkGameWin() == 0){
+					player++;
+					textPane.setText(Integer.toString(player));
+				}else if(a2.checkGameWin() == 1){
+					comp++;
+					textPane_1.setText(Integer.toString(comp));
+				} else if(a2.checkGameWin() == 2){
+					tie++;
+					System.out.println("It was a tie");
+				}
 				a2.resetGUI();
 			}
 				
@@ -162,6 +174,8 @@ public class Gui extends JFrame{
 		StyleConstants.setAlignment(center1, StyleConstants.ALIGN_CENTER);
 		doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
 		panel.add(textPane_1);
+		
+		
 		
 	}
 	
