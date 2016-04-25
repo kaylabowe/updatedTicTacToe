@@ -39,7 +39,7 @@ public class Gui extends JFrame{
 	public static int comp =0;
 	public static int player = 0;
 	public static int tie = 0;
-	//public static int moves = 0;
+	public static int moves = 0;
 	
 	/**
 	 * Launch the application.
@@ -56,15 +56,22 @@ public class Gui extends JFrame{
 					e.printStackTrace();
 				}
 				
-				int moves = 0;
+	//			int moves = 0;
 				int comp = 0;
 				Algorithm a1 = new Algorithm(table, gameCounter);
-				if(moves <9 )
+				if(moves <9 && a1.checkGameWin() != 1)
 				{	
+					
 					a1.userTurn();
 					moves++;	
 					System.out.print(moves);
+				}else{
+					if(a1.checkGameWin() == 1){
+						
+						table.setCellSelectionEnabled(false);
+					}
 				}
+				
 					
 			}
 		});
@@ -89,7 +96,7 @@ public class Gui extends JFrame{
 		panel.setBounds(5, 5, 424, 251);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
+		Algorithm a3 = new Algorithm(table, gameCounter);
 		table = new JTable();
 		table.setRowSelectionAllowed(false);
 		table.setFocusTraversalKeysEnabled(false);
@@ -175,8 +182,7 @@ public class Gui extends JFrame{
 		doc1.setParagraphAttributes(0, doc1.getLength(), center1, false);
 		panel.add(textPane_1);
 		
-		
-		
+			
 	}
 	
 	

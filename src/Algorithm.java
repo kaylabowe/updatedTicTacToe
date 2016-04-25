@@ -1,5 +1,7 @@
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JTable;
 import javax.swing.JTextPane;
@@ -11,7 +13,7 @@ public class Algorithm {
 	JTextPane textPane1;
 	public static int moves = 0; 
 	public int gameCounter;
-
+	public static int counter = 0;
 	public Algorithm(JTable table1, int gameCounterImp){
 	tableAI = table1;
 	gameCounter = gameCounterImp;
@@ -20,7 +22,7 @@ public class Algorithm {
 	
 	public void defend(int x, int y){
 
-		if(gameCounter % 2 == 0){
+		if(counter % 2 == 0){
 			if(tableAI.getValueAt(1, 1) ==  "X"){
 				
 				if(moves == 1){
@@ -59,6 +61,11 @@ public class Algorithm {
 
 					if(checkWin()){
 						moves++;
+						
+						if(checkGameWin() == 1){
+							tableAI.disable();
+							counter++;
+						}
 						return;
 					}
 					if(checkDefend()){
@@ -71,10 +78,15 @@ public class Algorithm {
 					{
 						findNull();
 					}
+					
 				} 
 				if(moves == 7){					
 					if(checkWin()){
 						moves++;
+						if(checkGameWin() == 1){
+							tableAI.disable();
+							counter++;
+						}
 						return;
 					}
 					if(checkDefend()){
@@ -89,6 +101,10 @@ public class Algorithm {
 				} // End of move 7
 
 				if(moves == 9){
+					if(checkGameWin() == 3){
+						tableAI.disable();
+						counter++;
+					}
 					if(checkWin() == false){
 						System.out.println("IT'S A DRAW!");
 					}
@@ -132,6 +148,11 @@ public class Algorithm {
 				if(moves == 5){
 					if(checkWin()){
 						moves++;
+						
+						if(checkGameWin() == 1){
+							tableAI.disable();
+							counter++;
+						}
 						return;
 					}
 					if(checkDefend()){
@@ -161,6 +182,11 @@ public class Algorithm {
 
 					if(checkWin()){
 						moves++;
+						
+						if(checkGameWin() == 1){
+							tableAI.disable();
+							counter++;
+						}
 						return;
 					}
 					if(checkDefend()){
@@ -175,6 +201,10 @@ public class Algorithm {
 				} // End of move 7
 				
 				if(moves == 9){
+					if(checkGameWin() == 3){
+						tableAI.disable();
+						counter++;
+					}
 					if(checkWin() == false){
 						System.out.println("IT'S A DRAW!");
 					}
@@ -531,16 +561,23 @@ public class Algorithm {
 		System.out.println(moves);
 		int j;
 		int i;
-			for(j = 0; j < 3; j++){
+		String[][] myStringArray = new String[3][3];
+		int winValue = checkGameWin();
+		for(j = 0; j < 3; j++){
 				for(i = 0; i < 3; i++){
 				  
 					
 					int row = j;
 			        int column = i;
 			      // do some action if appropriate column
-			      
+			      myStringArray[row][column] = (String) tableAI.getValueAt(row, column);
+			      if(myStringArray[row][column] == null)
+			      {
+			    	  myStringArray[row][column] = "_";
+			      }
 			      tableAI.setValueAt(null, row, column);
-			      
+			      tableAI.enable();
+			      counter = 0;
 			      
 				}
 				if((i == 2) && (j == 2)){
@@ -548,6 +585,36 @@ public class Algorithm {
 				}
 				
 			}
+		
+		try
+		{
+		    String file= "Moves.txt";
+		    FileWriter fw = new FileWriter(file,true); //the true will append the new data
+		    fw.write(myStringArray[0][0]+','+
+		    		 myStringArray[0][1]+','+
+		    		 myStringArray[0][2]+','+System.getProperty( "line.separator" )+
+		    		 myStringArray[1][0]+','+
+		    		 myStringArray[1][1]+','+
+		    		 myStringArray[1][2]+','+System.getProperty( "line.separator" )+
+		    		 myStringArray[2][0]+','+
+		    		 myStringArray[2][1]+','+
+		    		 myStringArray[2][2]+", \r\n");//appends the string to the file
+		    if(winValue==0){
+		    	fw.write("X WINS \r\n\r\n");
+		    }
+		    if(winValue==1){
+		    	fw.write("O WINS \r\n\r\n");
+		    }
+		    if(winValue==2){
+		    	fw.write("TIE \r\n\r\n");
+		    }
+		    fw.flush();
+		    fw.close();
+		}
+		catch(IOException ioe)
+		{
+		    System.err.println("IOException: " + ioe.getMessage());
+		}
 	
 	
 	}
@@ -577,18 +644,6 @@ public class Algorithm {
 			}
 	}
 	
-//	public void endGame(int winNum){
-//		  	int counter = 0;
-//			counter++;
-//			if(winNum == 0){
-//				textPane1.setText(Integer.toString(counter));
-//			}
-//		
-//		
-//			if(winNum == 1){
-//				textPane.setText(Integer.toString(counter));
-//			}
-//	}
 
 }
 
